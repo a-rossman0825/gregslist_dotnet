@@ -106,3 +106,41 @@ SET
   color = 'green'
 WHERE
   id = 3;
+
+
+  CREATE TABLE houses(
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  sqft SMALLINT UNSIGNED NOT NULL,
+  bedrooms TINYINT UNSIGNED NOT NULL,
+  bathrooms DOUBLE(3, 1) UNSIGNED NOT NULL,
+  img_url VARCHAR(500) NOT NULL,
+  description VARCHAR(500),
+  price MEDIUMINT UNSIGNED NOT NULL,
+  createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  creator_id VARCHAR(255) NOT NULL,
+  FOREIGN KEY (creator_id) REFERENCES accounts(id) ON DELETE CASCADE
+);
+
+DROP TABLE houses;
+
+INSERT INTO
+  houses (
+    sqft,
+    bedrooms,
+    bathrooms,
+    img_url,
+    description,
+    price,
+    creator_id
+  )
+VALUES
+  (
+    800,
+    2,
+    1.5,
+    'https://images.unsplash.com/photo-1668015642451-a3bb11afb441?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGlueSUyMGhvbWV8ZW58MHx8MHx8fDA%3D',
+    'tiny house',
+    100000,
+    '686d8ef556e974abecfe6d67'
+  );
