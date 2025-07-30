@@ -5,9 +5,16 @@ namespace gregslist_dotnet.Services;
 
 public class HousesService : IService<House>
 {
+  private readonly HousesRepository _housesRepository;
+
+  public HousesService(HousesRepository housesRepository)
+  {
+    _housesRepository = housesRepository;
+  }
   public House Create(House updateData)
   {
-    throw new NotImplementedException();
+    House house = _housesRepository.Create(updateData);
+    return house;
   }
 
   public void Delete(int id)

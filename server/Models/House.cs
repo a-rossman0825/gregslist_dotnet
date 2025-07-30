@@ -12,6 +12,7 @@ public class House
   [Range(0, 25)] public int? Bathrooms { get; set; }
   [MaxLength(500)] public string ImgUrl { get; set; }
   [MaxLength(500)] public string Description { get; set; }
-  [Range(0,10000000)] public int? Price { get; set; }
+  [Range(0, 10000000)] public int? Price { get; set; }
   public string CreatorId { get; set; }
+  public Account Creator { get; set; }
 }

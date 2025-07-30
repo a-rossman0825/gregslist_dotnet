@@ -6,15 +6,27 @@ namespace gregslist_dotnet.Controllers;
 public class HousesController : ControllerBase
 {
   private readonly HousesService _housesService;
+  private readonly Auth0Provider _auth0Provider;
 
-  public HousesController(HousesService housesService)
+  public HousesController(Auth0Provider auth0Provider, HousesService housesService)
   {
     _housesService = housesService;
+    _auth0Provider = auth0Provider;
   }
 
-  [HttpGet]
-  public string Test()
+  [HttpPost, Authorize]
+  public async Task<ActionResult<House>> Create([FromBody] House houseData)
   {
-    return "It Works!";
+    try
+    {
+      Account userInfo = await _auth0Provider.GetUserInfoAsync<Account>(HttpContext);
+      houseData.CreatorId = userInfo.Id;
+      House house = _housesService.Create(houseData);
+      return Ok(house);
+    }
+    catch (Exception exception)
+    {
+      return BadRequest(exception.Message);
+    }
   }
 }
