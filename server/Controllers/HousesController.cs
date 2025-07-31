@@ -14,6 +14,22 @@ public class HousesController : ControllerBase
     _auth0Provider = auth0Provider;
   }
 
+  [HttpGet]
+  public ActionResult<List<House>> GetHouses()
+  {
+    try
+    {
+      List<House> houses = _housesService.GetAll();
+      return Ok(houses);
+    }
+    catch (Exception exception)
+    {
+      return BadRequest(exception.Message);
+    }
+  }
+
+
+
   [HttpPost, Authorize]
   public async Task<ActionResult<House>> Create([FromBody] House houseData)
   {
@@ -29,4 +45,50 @@ public class HousesController : ControllerBase
       return BadRequest(exception.Message);
     }
   }
+
+  [HttpGet("{id}")]
+  public ActionResult<House> GetById(int id)
+  {
+    try
+    {
+      House house = _housesService.GetById(id);
+      return Ok(house);
+    }
+    catch (Exception exception)
+    {
+      return BadRequest(exception.Message);
+    }
+  }
+
+  [HttpPut("{id}"), Authorize]
+  public async Task<ActionResult<House>> UpdateHouse(int id, [FromBody] House updateData)
+  {
+    try
+    {
+      Account userInfo = await _auth0Provider.GetUserInfoAsync<Account>(HttpContext);
+      House house = _housesService.Update(id, updateData, userInfo);
+      return Ok(house);
+    }
+    catch (Exception exception)
+    {
+      return BadRequest(exception.Message);
+    }
+  }
+
+  [HttpDelete("{id}"), Authorize]
+  public async Task<ActionResult<string>> Delete(int id)
+  {
+    try
+    {
+      Account userInfo = await _auth0Provider.GetUserInfoAsync<Account>(HttpContext);
+      string message = _housesService.Delete(id, userInfo);
+      return Ok(message);
+    }
+    catch (Exception exception)
+    {
+      return BadRequest(exception.Message);
+    }
+  }
+
+  
 }

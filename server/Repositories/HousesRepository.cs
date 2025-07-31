@@ -51,24 +51,73 @@ public class HousesRepository : IRepository<House>
 
     return newHouse;
   }
-  
+
   public void Delete(int id)
   {
-    throw new NotImplementedException();
+    string sql = "DELETE FROM houses WHERE id = @HouseId LIMIT 1;";
+
+    int rowsAffected = _db.Execute(sql, new { HouseId = id });
+
+    if (rowsAffected != 1)
+    {
+      throw new Exception(rowsAffected + " rows deleted forever, you fudged up bro, here come the lawyers 👨🏻‍💼💼");
+    }
   }
 
   public List<House> GetAll()
   {
-    throw new NotImplementedException();
+    string sql = @"
+    SELECT
+    houses.*,
+    accounts.*
+    FROM houses
+    JOIN accounts ON houses.creator_id = accounts.id
+    ORDER BY houses.created_at ASC;";
+
+    List<House> houses = _db.Query(sql, (House house, Account account) =>
+    {
+      house.Creator = account;
+      return house;
+    }).ToList();
+    return houses;
   }
 
   public House GetById(int id)
   {
-    throw new NotImplementedException();
+    string sql = @"
+    SELECT
+    houses.*,
+    accounts.*
+    FROM houses
+    JOIN accounts ON houses.creator_id = accounts.id
+    WHERE houses.id = @id;";
+    House house = _db.Query(sql, (House house, Account account) =>
+    {
+      house.Creator = account;
+      return house;
+    }, new { HouseId = id }).SingleOrDefault();
+
+    return house;
   }
 
   public void Update(House updateData)
   {
-    throw new NotImplementedException();
+    string sql = @"
+    UPDATE houses
+    SET
+    sqft = @Sqft,
+    bedrooms = @Bedrooms,
+    bathrooms = @Bathrooms,
+    img_url = @ImgUrl,
+    description = @Description,
+    price = @Price,
+    WHERE id = @Id LIMIT 1;";
+
+    int rowsAffected = _db.Execute(sql, updateData);
+
+    if (rowsAffected != 1)
+    {
+      throw new Exception(rowsAffected + " rows have been updated, you done goofed, dude. Go fix it!!");
+    }
   }
 }

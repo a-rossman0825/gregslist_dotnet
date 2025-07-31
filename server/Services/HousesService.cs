@@ -17,9 +17,17 @@ public class HousesService : IService<House>
     return house;
   }
 
-  public void Delete(int id)
+  public string Delete(int id, Account userInfo)
   {
-    throw new NotImplementedException();
+    House houseToDelete = GetById(id);
+    if (houseToDelete.CreatorId != userInfo.Id)
+    {
+      throw new Exception($"NOT YOUR HOUSE, SCUMBAG. YOU BETTER RUN, {userInfo.Name.ToUpper()}! COPS ARE ON THEIR WAY 🚓 🚓 🚓 🚓 🚓");
+    }
+
+    _housesRepository.Delete(id);
+
+    return $"Your {houseToDelete.Bedrooms} bedroom {houseToDelete.Bathrooms} bathroom house has been deleted!";
   }
 
   public List<House> GetAll()
@@ -29,11 +37,33 @@ public class HousesService : IService<House>
 
   public House GetById(int id)
   {
-    throw new NotImplementedException();
+    House house = _housesRepository.GetById(id);
+
+    if (house == null)
+    {
+      throw new Exception($"Invalid id: {id}");
+    }
+
+    return house;
   }
 
-  public House Update(House updateData)
+  public House Update(int id, House updateData, Account userInfo)
   {
-    throw new NotImplementedException();
+    House originalHouse = GetById(id);
+
+    if (originalHouse.CreatorId != userInfo.Id)
+    {
+      throw new Exception($"Not your house, bro, stop it, {userInfo.Name}");
+    }
+
+    originalHouse.Sqft = updateData.Sqft ?? originalHouse.Sqft;
+    originalHouse.Bedrooms = updateData.Bedrooms ?? originalHouse.Bedrooms;
+    originalHouse.Bathrooms = updateData.Bathrooms ?? originalHouse.Bathrooms;
+    originalHouse.Description = updateData.Description ?? originalHouse.Description;
+    originalHouse.Price = updateData.Price ?? originalHouse.Price;
+    originalHouse.ImgUrl = updateData.ImgUrl ?? originalHouse.ImgUrl;
+
+    _housesRepository.Update(originalHouse);
+    return originalHouse;
   }
 }
