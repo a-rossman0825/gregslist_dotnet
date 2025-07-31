@@ -52,11 +52,11 @@ public class HousesRepository : IRepository<House>
     return newHouse;
   }
 
-  public void Delete(int id)
+  public void Delete(int houseId)
   {
-    string sql = "DELETE FROM houses WHERE id = @HouseId LIMIT 1;";
+    string sql = "DELETE FROM houses WHERE id = @houseId LIMIT 1;";
 
-    int rowsAffected = _db.Execute(sql, new { HouseId = id });
+    int rowsAffected = _db.Execute(sql, new { HouseId = houseId });
 
     if (rowsAffected != 1)
     {

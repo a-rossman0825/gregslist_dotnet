@@ -17,31 +17,32 @@ public class HousesService : IService<House>
     return house;
   }
 
-  public string Delete(int id, Account userInfo)
+  public string Delete(int houseId, Account userInfo)
   {
-    House houseToDelete = GetById(id);
+    House houseToDelete = GetById(houseId);
     if (houseToDelete.CreatorId != userInfo.Id)
     {
       throw new Exception($"NOT YOUR HOUSE, SCUMBAG. YOU BETTER RUN, {userInfo.Name.ToUpper()}! COPS ARE ON THEIR WAY 🚓 🚓 🚓 🚓 🚓");
     }
 
-    _housesRepository.Delete(id);
+    _housesRepository.Delete(houseId);
 
     return $"Your {houseToDelete.Bedrooms} bedroom {houseToDelete.Bathrooms} bathroom house has been deleted!";
   }
 
   public List<House> GetAll()
   {
-    throw new NotImplementedException();
+    List<House> houses = _housesRepository.GetAll();
+    return houses;
   }
 
-  public House GetById(int id)
+  public House GetById(int houseId)
   {
-    House house = _housesRepository.GetById(id);
+    House house = _housesRepository.GetById(houseId);
 
     if (house == null)
     {
-      throw new Exception($"Invalid id: {id}");
+      throw new Exception($"Invalid id: {houseId}");
     }
 
     return house;
