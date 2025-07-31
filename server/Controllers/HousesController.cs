@@ -46,12 +46,12 @@ public class HousesController : ControllerBase
     }
   }
 
-  [HttpGet("{id}")]
-  public ActionResult<House> GetById(int id)
+  [HttpGet("{houseId}")]
+  public ActionResult<House> GetById(int houseId)
   {
     try
     {
-      House house = _housesService.GetById(id);
+      House house = _housesService.GetById(houseId);
       return Ok(house);
     }
     catch (Exception exception)
@@ -75,13 +75,13 @@ public class HousesController : ControllerBase
     }
   }
 
-  [HttpDelete("{id}"), Authorize]
-  public async Task<ActionResult<string>> Delete(int id)
+  [HttpDelete("{houseId}"), Authorize]
+  public async Task<ActionResult<string>> Delete(int houseId)
   {
     try
     {
       Account userInfo = await _auth0Provider.GetUserInfoAsync<Account>(HttpContext);
-      string message = _housesService.Delete(id, userInfo);
+      string message = _housesService.Delete(houseId, userInfo);
       return Ok(message);
     }
     catch (Exception exception)
@@ -89,6 +89,4 @@ public class HousesController : ControllerBase
       return BadRequest(exception.Message);
     }
   }
-
-  
 }

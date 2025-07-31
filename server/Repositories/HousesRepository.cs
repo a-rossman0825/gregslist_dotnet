@@ -82,7 +82,7 @@ public class HousesRepository : IRepository<House>
     return houses;
   }
 
-  public House GetById(int id)
+  public House GetById(int houseId)
   {
     string sql = @"
     SELECT
@@ -90,12 +90,12 @@ public class HousesRepository : IRepository<House>
     accounts.*
     FROM houses
     JOIN accounts ON houses.creator_id = accounts.id
-    WHERE houses.id = @id;";
+    WHERE houses.id = @houseId;";
     House house = _db.Query(sql, (House house, Account account) =>
     {
       house.Creator = account;
       return house;
-    }, new { HouseId = id }).SingleOrDefault();
+    }, new { houseId }).SingleOrDefault();
 
     return house;
   }
